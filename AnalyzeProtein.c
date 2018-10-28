@@ -114,8 +114,8 @@ void calculateLocations(float atomArray[MAX_ATOMS][COORDINATE_NUMBER], int i, ch
     printf(RG_MESSAGE, distanceTotal);
     float distanceMax = 0.000f;
     for (k = 0; k < i; k++) {
-        distanceTotal = 0.000f;
         for (int l = 0; l < i; l++) {
+            distanceTotal = 0.000f;
             if(k >= l && k < i-1)
             {
                 l = k;
