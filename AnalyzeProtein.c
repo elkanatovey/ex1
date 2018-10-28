@@ -14,8 +14,8 @@
 #define  NO_ATOM_ERROR "Error - 0 atoms were found in the file %s\n"
 #define COMPLETED_MOLECULE_MESSAGE "PDB file %s, %d atoms were read\n"
 #define CG_MESSAGE "Cg = %.3f %.3f %.3f\n"
-#define RG_MESSAGE "Rg = %f\n"
-#define DMAX_MESSAGE "Dmax = %\n"
+#define RG_MESSAGE "Rg = %.3f\n"
+#define DMAX_MESSAGE "Dmax = %.3f\n"
 #define X_COORDINATE 0
 #define Y_COORDINATE 1
 #define Z_COORDINATE 2
@@ -106,14 +106,31 @@ void calculateLocations(float atomArray[MAX_ATOMS][COORDINATE_NUMBER], int i, ch
     printf(CG_MESSAGE, pointSum[X_COORDINATE], pointSum[Y_COORDINATE], pointSum[Z_COORDINATE]);
     float distanceTotal = 0.000f;
     for (k = 0; k < i; k++) {
-        float distanceAverage[COORDINATE_NUMBER];
         for (j = 0; j < COORDINATE_NUMBER; j++) {
             distanceTotal += powf((atomArray[k][j] - pointSum[j]), 2.000f);
         }
     }
     distanceTotal = sqrtf((distanceTotal/(float)i));
     printf(RG_MESSAGE, distanceTotal);
-
+    float distanceMax = 0.000f;
+    for (k = 0; k < i; k++) {
+        distanceTotal = 0.000f;
+        for (int l = 0; l < i; l++) {
+            if(k >= l && k < i-1)
+            {
+                l = k;
+            }
+            for (j = 0; j < COORDINATE_NUMBER; j++) {
+                distanceTotal += powf((atomArray[k][j] - atomArray[l][j]), 2.000f);
+            }
+            distanceTotal = sqrtf(distanceTotal);
+            if(distanceTotal > distanceMax)
+            {
+                distanceMax = distanceTotal;
+            }
+        }
+    }
+    printf(DMAX_MESSAGE, distanceMax);
 }
 
 
