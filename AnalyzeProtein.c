@@ -2,6 +2,7 @@
 #include<string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <math.h>
 
 #define NO_FILES_ERROR "Usage: AnalyzeProtein <pdb1> <pdb2> ...\n"
 #define FILE_NAME_START 1
@@ -13,7 +14,7 @@
 #define  NO_ATOM_ERROR "Error - 0 atoms were found in the file %s\n"
 #define COMPLETED_MOLECULE_MESSAGE "PDB file %s, %d atoms were read\n"
 #define CG_MESSAGE "Cg = %.3f %.3f %.3f\n"
-#define RG_MESSAGE "Rg = %\n"
+#define RG_MESSAGE "Rg = %f\n"
 #define DMAX_MESSAGE "Dmax = %\n"
 #define X_COORDINATE 0
 #define Y_COORDINATE 1
@@ -51,7 +52,13 @@ int legalLineLengthCheck(const int lineLength, const char* currentLine)
 }
 
 
-//insert the coordinates from the current line
+/**
+ * insert coordinatetes from the current line
+ * @param currentLine
+ * @param atomArray
+ * @param i
+ * @return
+ */
 int insertCoordinates(const char currentLine[], float atomArray[MAX_ATOMS][COORDINATE_NUMBER],
                         int i)
 {
@@ -97,6 +104,15 @@ void calculateLocations(float atomArray[MAX_ATOMS][COORDINATE_NUMBER], int i, ch
         pointSum[k] = pointSum[k] / i;
     }
     printf(CG_MESSAGE, pointSum[X_COORDINATE], pointSum[Y_COORDINATE], pointSum[Z_COORDINATE]);
+    float distanceTotal = 0.000f;
+    for (k = 0; k < i; k++) {
+        float distanceAverage[COORDINATE_NUMBER];
+        for (j = 0; j < COORDINATE_NUMBER; j++) {
+            distanceTotal += powf((atomArray[k][j] - pointSum[j]), 2.000f);
+        }
+    }
+    distanceTotal = sqrtf((distanceTotal/(float)i));
+    printf(RG_MESSAGE, distanceTotal);
 
 }
 
